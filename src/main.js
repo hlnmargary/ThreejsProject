@@ -1,86 +1,60 @@
 import * as THREE from 'three';
+import OrbitControls from 'three-orbitcontrols';
+
 //RERENDER
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-
 //SCENE
 var scene = new THREE.Scene(); // initialising the scene
-scene.background = new THREE.Color(0xffeccb);
+scene.background = new THREE.Color(0xffffff);
+scene.directionalLight = new THREE.DirectionalLight(0xf51485, 4.5);
 
 //CAMERA
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 80;
+scene.add(camera);
 
 
-//OBJECT
-function CustomSinCurve(scale) {
-
-  THREE.Curve.call(this);
-
-  this.scale = (scale === undefined) ? 1 : scale;
-
+//STARS
+var starsGeometry = new THREE.Geometry();
+for (var i = 0; i < 100000; i++) {
+  var star = new THREE.Vector3(9, 3, 9);
+  star.x = THREE.Math.randFloatSpread(1000);
+  star.y = THREE.Math.randFloatSpread(1000);
+  star.z = THREE.Math.randFloatSpread(1000);
+  starsGeometry.vertices.push(star);
 }
-
-CustomSinCurve.prototype = Object.create(THREE.Curve.prototype);
-CustomSinCurve.prototype.constructor = CustomSinCurve;
-
-CustomSinCurve.prototype.getPoint = function (t) {
-
-  var tx = t * 8 - 4.5;
-  var ty = Math.sin(2 * Math.PI * t);
-  var tz = 0;
-
-  return new THREE.Vector3(tx, ty, tz).multiplyScalar(this.scale);
-
-};
-
-var path = new CustomSinCurve(10);
-var geometry = new THREE.TubeGeometry(path, 300, 1, 10, false);
-var material = new THREE.MeshBasicMaterial({ color: 0x31369c });
-var mesh = new THREE.Mesh(geometry, material);
-
-var light = new THREE.AmbientLight(0x404040); // soft white light
-
-
-//ADDES ON SCENE
-scene.add(mesh, light);
+var starsMaterial = new THREE.PointsMaterial({
+  color: 0x23369c,
+  size: 0.4
+});
+var starField = new THREE.Points(starsGeometry, starsMaterial);
+scene.add(starField);
 
 
 
-// var geometrysphere = new THREE.SphereGeometry(2, 3, 30);
-// var materialsphere = new THREE.MeshBasicMaterial({ color: 0x72369c });
-// var sphere = new THREE.Mesh(geometrysphere, materialsphere);
+//OBJECT 2
+var geometry = new THREE.SphereBufferGeometry(30, 2, 32);
+var material = new THREE.MeshBasicMaterial({ color: 0xff8d8d, wireframe: true });
+var sphere = new THREE.Mesh(geometry, material);
+sphere.castShadow = true; //default is false
+sphere.receiveShadow = false; //default
+scene.add(sphere);
 
-// var geometrycone = new THREE.ConeGeometry(5, 5, 5);
-// var materialcone = new THREE.MeshBasicMaterial({ color: 0x23369c });
-// var cone = new THREE.Mesh(geometrycone, materialcone);
 
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true
+controls.dampingFactor = 0.25
+controls.enableZoom = true;
+controls.enableKeys = true;
 
-// scene.add(sphere, cone);
-
-function render() {
+function animate() {
   requestAnimationFrame(animate);
+  // required if controls.enableDamping or controls.autoRotate are set to true
+  controls.update();
   renderer.render(scene, camera);
 }
-
-
-camera.position.z = 50;
-
-var animate = function () {
-  requestAnimationFrame(animate);
-
-  // sphere.rotation.x += 0.00;
-  // sphere.rotation.y += 0.05;
-  // cone.rotation.x += 0.00;
-  // cone.rotation.y += 0.05;
-
-  mesh.rotation.x += 0.01;
-  mesh.rotation.y += 0.01;
-
-
-
-  renderer.render(scene, camera);
-};
 
 animate();
