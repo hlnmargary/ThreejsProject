@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import OrbitControls from 'three-orbitcontrols';
+import OrbitControls from '../node_modules/three-orbitcontrols/OrbitControls';
+// import SvgLoader from '../node_modules/three/examples/js/loaders/SVGLoader';
 
 //RERENDER
 var renderer = new THREE.WebGLRenderer();
@@ -36,19 +37,65 @@ scene.add(starField);
 
 
 //OBJECT 2
-var geometry = new THREE.SphereBufferGeometry(30, 2, 32);
-var material = new THREE.MeshBasicMaterial({ color: 0xff8d8d, wireframe: true });
+
+var material = new THREE.MeshNormalMaterial;
+var geometry = new THREE.BoxGeometry(10, 10, 10);
 var sphere = new THREE.Mesh(geometry, material);
-sphere.castShadow = true; //default is false
-sphere.receiveShadow = false; //default
 scene.add(sphere);
 
 
+//SVG 
+
+// var loader = new SvgLoader();
+
+// loader.load(
+//   // resource URL
+//   'assets/myface.svg',
+//   // called when the resource is loaded
+//   function (data) {
+
+//     var paths = data.paths;
+//     var group = new THREE.Group();
+
+//     for (var i = 0; i < paths.length; i++) {
+
+//       var path = paths[i];
+
+//       var material = new THREE.MeshBasicMaterial({
+//         color: path.color,
+//         side: THREE.DoubleSide,
+//         depthWrite: false
+//       });
+
+//       var shapes = path.toShapes(true);
+
+//       for (var j = 0; j < shapes.length; j++) {
+
+//         var shape = shapes[j];
+//         var geometry = new THREE.ShapeBufferGeometry(shape);
+//         var mesh = new THREE.Mesh(geometry, material);
+//         group.add(mesh);
+
+//       }
+
+//     }
+
+//     scene.add(group);
+
+//   });
+
+
+
+
+//CAMERA CONTROL 
+
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true
-controls.dampingFactor = 0.25
+controls.enableDamping = false;
+controls.dampingFactor = 0.25;
 controls.enableZoom = true;
 controls.enableKeys = true;
+controls.maxDistance = 200;
+
 
 function animate() {
   requestAnimationFrame(animate);

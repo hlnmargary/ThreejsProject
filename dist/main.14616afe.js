@@ -43491,13 +43491,15 @@ var _three = require('three');
 
 var THREE = _interopRequireWildcard(_three);
 
-var _threeOrbitcontrols = require('three-orbitcontrols');
+var _OrbitControls = require('../node_modules/three-orbitcontrols/OrbitControls');
 
-var _threeOrbitcontrols2 = _interopRequireDefault(_threeOrbitcontrols);
+var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+// import SvgLoader from '../node_modules/three/examples/js/loaders/SVGLoader';
 
 //RERENDER
 var renderer = new THREE.WebGLRenderer();
@@ -43531,18 +43533,61 @@ var starField = new THREE.Points(starsGeometry, starsMaterial);
 scene.add(starField);
 
 //OBJECT 2
-var geometry = new THREE.SphereBufferGeometry(30, 2, 32);
-var material = new THREE.MeshBasicMaterial({ color: 0xff8d8d, wireframe: true });
+
+var material = new THREE.MeshNormalMaterial();
+var geometry = new THREE.BoxGeometry(10, 10, 10);
 var sphere = new THREE.Mesh(geometry, material);
-sphere.castShadow = true; //default is false
-sphere.receiveShadow = false; //default
 scene.add(sphere);
 
-var controls = new _threeOrbitcontrols2.default(camera, renderer.domElement);
-controls.enableDamping = true;
+//SVG 
+
+// var loader = new SvgLoader();
+
+// loader.load(
+//   // resource URL
+//   'assets/myface.svg',
+//   // called when the resource is loaded
+//   function (data) {
+
+//     var paths = data.paths;
+//     var group = new THREE.Group();
+
+//     for (var i = 0; i < paths.length; i++) {
+
+//       var path = paths[i];
+
+//       var material = new THREE.MeshBasicMaterial({
+//         color: path.color,
+//         side: THREE.DoubleSide,
+//         depthWrite: false
+//       });
+
+//       var shapes = path.toShapes(true);
+
+//       for (var j = 0; j < shapes.length; j++) {
+
+//         var shape = shapes[j];
+//         var geometry = new THREE.ShapeBufferGeometry(shape);
+//         var mesh = new THREE.Mesh(geometry, material);
+//         group.add(mesh);
+
+//       }
+
+//     }
+
+//     scene.add(group);
+
+//   });
+
+
+//CAMERA CONTROL 
+
+var controls = new _OrbitControls2.default(camera, renderer.domElement);
+controls.enableDamping = false;
 controls.dampingFactor = 0.25;
 controls.enableZoom = true;
 controls.enableKeys = true;
+controls.maxDistance = 200;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -43552,7 +43597,7 @@ function animate() {
 }
 
 animate();
-},{"three":"node_modules/three/build/three.module.js","three-orbitcontrols":"node_modules/three-orbitcontrols/OrbitControls.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"three":"node_modules/three/build/three.module.js","../node_modules/three-orbitcontrols/OrbitControls":"node_modules/three-orbitcontrols/OrbitControls.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -43581,7 +43626,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '51641' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '56602' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
